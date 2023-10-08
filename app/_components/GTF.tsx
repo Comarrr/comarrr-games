@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Progress } from "@/components/ui/progress"
 import axios from "axios"
-import { log } from "console"
+import { Dot } from "lucide-react"
 import Image from "next/image"
 import { ChangeEvent, useEffect, useState } from "react"
 
@@ -21,7 +22,7 @@ interface GTFProps {
 
 }
 
-const GTF = ({ setIsAnswerCorrect } : any) => {
+const GTF = ({ setIsAnswerCorrect, isAnswerCorrect } : any) => {
 	
 	const [countriesData, setCountriesData] = useState<GTFProps[]>([])
 	const [flagsData, setFlagsData] = useState<string[]>([])
@@ -53,17 +54,22 @@ const GTF = ({ setIsAnswerCorrect } : any) => {
 			})
 	}, [])
 
-
 	const shuffleArrays = (flags: string[], names: string[], capitals: string[]) => {
 		const shuffledFlags = [...flags];
 		const shuffledNames = [...names];
-		const shuffledCapitals = [...capitals];		for (let i = shuffledFlags.length - 1; i > 0; i--) {
+		const shuffledCapitals = [...capitals];		
+		for (let i = shuffledFlags.length - 1; i > 0; i--) {
 		  const j = Math.floor(Math.random() * (i + 1));
 		  [shuffledFlags[i], shuffledFlags[j]] = [shuffledFlags[j], shuffledFlags[i]];
 		  [shuffledNames[i], shuffledNames[j]] = [shuffledNames[j], shuffledNames[i]];
 		  [shuffledCapitals[i], shuffledCapitals[j]] = [shuffledCapitals[j], shuffledCapitals[i]];
 		}
-		return { shuffledFlags, shuffledNames, shuffledCapitals };
+		return { 
+			shuffledFlags: shuffledFlags.slice(0, 15), 
+			shuffledNames: shuffledNames.slice(0, 15), 
+			shuffledCapitals: shuffledCapitals.slice(0, 15),
+		  };
+		
 	  }
 
 	  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -118,6 +124,15 @@ const GTF = ({ setIsAnswerCorrect } : any) => {
 			<div className="flex justify-center mt-5 gap-8">
 				<Button onClick={() => setHint(!hint)}>Indice</Button>
 				<Button onClick={() => setName(!name)}>Reponse</Button>
+			</div>
+			<Progress className="relative left-1/2 -translate-x-1/2 mt-5 w-1/2" value={currentFlagIndex} max={flagsData.length} />
+			
+			<div className="flex justify-center items-center">
+				{/* {
+					flagsData.map(() => (
+						<p key={currentFlagIndex}>DOT</p>
+					))
+				} */}
 			</div>
 		</div>
 	)
